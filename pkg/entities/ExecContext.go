@@ -20,6 +20,7 @@ package entities
 import (
 	"auto-test-go/pkg/util"
 	"encoding/json"
+	"github.com/yuin/gluamapper"
 	lua "github.com/yuin/gopher-lua"
 	"strings"
 	"time"
@@ -84,20 +85,38 @@ func (ctx *ExecContext) ReadLogs() *[]string {
 }
 
 func (ctx *ExecContext) Refresh(jIT *lua.LState, table *lua.LTable) {
-	jIT.ForEach(table, func(value lua.LValue, value2 lua.LValue) {
-		if strings.ToLower(value.String()) == "inner_log" {
-			ctx.AddLogs("[ScriptInnerLog]" + value2.String())
+	jIT.ForEach(table, func(propertyName lua.LValue, propertyValue lua.LValue) {
+		if strings.ToLower(propertyName.String()) == "inner_log" {
+			ctx.AddLogs("[ScriptInnerLog]" + propertyValue.String())
 			return
 		}
-		if strings.ToLower(value.String()) == "assert" {
-			if strings.ToLower(value2.String()) == "false" {
+
+		if strings.ToLower(propertyName.String()) == "assert" {
+			if strings.ToLower(propertyValue.String()) == "false" {
 				//断言失败，将状态设置为失败，并且继续执行后置脚本
 				ctx.AssertSuccess = false
 			} else {
 				ctx.AssertSuccess = true
 			}
 		}
-		ctx.Variables[value.String()] = VarValue{Value: value2.String()}
+
+		ctx.Variables[propertyName.String()] = VarValue{Value: propertyValue.String(), Type: propertyValue.Type().String(), Object: propertyValue}
+		if propertyValue.Type().String() == "table" {
+			goType := map[string]interface{}{}
+			luaData := propertyValue.(*lua.LTable)
+			err := gluamapper.Map(luaData, &goType)
+			if err != nil {
+				ctx.AddLogs("change table type to go type error: " + err.Error())
+				return
+			}
+
+			value, err := json.Marshal(goType)
+			if err != nil {
+				return
+			}
+
+			ctx.Variables[propertyName.String()] = VarValue{Value: string(value), Type: propertyValue.Type().String(), Object: propertyValue}
+		}
 	})
 }
 func (ctx *ExecContext) Stop() bool {

@@ -19,6 +19,7 @@ package script
 
 import (
 	"auto-test-go/pkg/entities"
+	"auto-test-go/pkg/enum"
 	"auto-test-go/pkg/util"
 	"context"
 	"errors"
@@ -121,7 +122,14 @@ func buildScript(execCtx *entities.ExecContext, funcCtx *entities.FuncContext, f
 	// 使用函数名+ case ID 确定函数名
 	var log string
 	if execCtx.CaseId != "" && execCtx.Name != "" && execCtx.TaskId != "" {
-		funcName := fmt.Sprintf("%s_%s_%s", functionName, execCtx.CaseId, execCtx.TaskId)
+		var funcName string
+		if functionName != enum.LuaFuncName_DoCommonFunctionExecute {
+			funcName = fmt.Sprintf("%s_%s_%s", functionName, execCtx.CaseId, execCtx.TaskId)
+		} else {
+			//通用函数不替换函数名
+			funcName = functionName
+		}
+
 		funcScript := strings.Replace(function, "@functionName", funcName, -1)
 		funcScript = strings.Replace(funcScript, "@funcBody", funcCtx.FuncBody, -1)
 		funcCtx.FuncBody = funcScript
@@ -160,8 +168,14 @@ func scriptExecute(funcName string, execCtx *entities.ExecContext, funcCtx *enti
 	timeCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	jIT.SetContext(timeCtx)
+	callFunction := funcCtx.FuncName
+	if funcName == enum.LuaFuncName_DoCommonFunctionExecute {
+		//兼容通用函数调试
+		callFunction = enum.LuaFuncName_DoCommonFunctionExecute
+	}
+
 	if err := jIT.CallByParam(lua.P{
-		Fn:      jIT.GetGlobal(funcCtx.FuncName),
+		Fn:      jIT.GetGlobal(callFunction),
 		NRet:    1,
 		Protect: true,
 	}, table); err != nil {

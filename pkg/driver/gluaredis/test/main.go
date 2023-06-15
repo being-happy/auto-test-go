@@ -51,7 +51,7 @@ func main() {
            if ok then
                print('close success');
            end
-`, "dev-middle.hgj.net", "6379", 11, "123456")
+`, "127.0.0.1", "6379", 11, "123456")
 	err := L.DoString(script)
 	if err != nil {
 		fmt.Println(err.Error())

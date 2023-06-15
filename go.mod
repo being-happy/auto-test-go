@@ -12,6 +12,8 @@ require (
 	github.com/nacos-group/nacos-sdk-go v1.0.0
 	github.com/redis/go-redis/v9 v9.0.3
 	github.com/tengattack/gluasql v0.0.0-20210614064624-5de4ebec779d
+	github.com/valyala/fasttemplate v1.2.2
+	github.com/yuin/gluamapper v0.0.0-20150323120927-d836955830e7
 	github.com/yuin/gopher-lua v0.0.0-20220504180219-658193537a64
 	gopkg.in/h2non/gentleman.v2 v2.0.5
 )
@@ -28,11 +30,13 @@ require (
 	github.com/junhsieh/goexamples v0.0.0-20190721045834-1c67ae74caa6 // indirect
 	github.com/lestrrat/go-file-rotatelogs v0.0.0-20180223000712-d3151e2a480f // indirect
 	github.com/lestrrat/go-strftime v0.0.0-20180220042222-ba3bf9c1d042 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/toolkits/concurrent v0.0.0-20150624120057-a4371d70e3e3 // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect

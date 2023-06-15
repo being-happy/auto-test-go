@@ -42,7 +42,6 @@ func main() {
 }
 
 func prepare() {
-	util.NacosHelper{}.RegisterServiceInstance()
 	util.Init()
 	var handler script.IScriptHandler
 
@@ -50,7 +49,7 @@ func prepare() {
 	if err != nil {
 		panic(err)
 	}
-	script.CaseRegister.Register(enum.LuaFuncType_DoBaseUserCaseExecute, enum.ScriptType_LuaScript, handler)
+	script.CaseRegister.Register(enum.LuaFuncType_DoBaseExecute, enum.ScriptType_LuaScript, handler)
 
 	handler, err = script.NewLuaScriptDoHttpCallHandler()
 	if err != nil {
@@ -75,11 +74,14 @@ func prepare() {
 		panic(err)
 	}
 	script.CaseRegister.Register(enum.ProtocolTypeHttp_DoRequest, enum.ScriptType_HttpCall, handler)
+
+	handler, err = script.NewCommonFuncDebuggerHandler()
+	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.LuaFuncName_DoCommonFunctionExecute, handler)
+
 	err = pkg.TaskDispatch.Init()
 	if err != nil {
 		panic(err)
 	}
-
 	util.Nacos_Helper.RegisterServiceInstance()
 }
 

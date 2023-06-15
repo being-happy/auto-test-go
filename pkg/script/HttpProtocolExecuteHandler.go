@@ -73,6 +73,7 @@ func (l *HttpProtocolExecuteHandler) BuildScript(execCtx *entities.ExecContext, 
 		}
 	}
 
+	// url 的变量必须单独替换，否则会引发 URL 编码问题
 	if request.Parameters != nil && len(request.Parameters) > 0 {
 		for k, v := range request.Parameters {
 			reqUrl = reqUrl + k + "=" + l.replaceUrlParameters(v, execCtx.Variables, true) + "&"
@@ -81,15 +82,15 @@ func (l *HttpProtocolExecuteHandler) BuildScript(execCtx *entities.ExecContext, 
 
 	request.Url = reqUrl
 	if len(execCtx.Variables) > 0 {
-		for k, v := range execCtx.Variables {
-			//替换请求头上的变量
-			for hk, hv := range request.Headers {
-				//优先根据变量进行匹配,若变量不匹配则根据名称匹配，若名称相同则替换
-				request.Headers[hk] = l.template(hv, k, v.Value)
-			}
-			//替换请求体当中的变量
-			request.Body = l.template(request.Body, k, v.Value)
+		fastTemplate := FastTemplate{}
+		//优先替换所有的花括号
+		vars := fastTemplate.convertVar(execCtx.Variables)
+		for hk, hv := range request.Headers {
+			//优先根据变量进行匹配,若变量不匹配则根据名称匹配，若名称相同则替换
+			request.Headers[hk] = fastTemplate.template(hv, vars)
 		}
+		//替换请求体当中的变量
+		request.Body = fastTemplate.template(request.Body, vars)
 	}
 
 	//解码 url 忽略错误
@@ -112,13 +113,8 @@ func (l *HttpProtocolExecuteHandler) replaceUrlParameters(dist string, variables
 	}
 
 	if len(variables) > 0 {
-		for k, v := range variables {
-			//arg := "@" + k
-			//if strings.Contains(dist, arg) {
-			//	dist = strings.Replace(dist, arg, v.Value, -1)
-			//}
-			dist = l.template(dist, k, v.Value)
-		}
+		fastTemplate := FastTemplate{}
+		dist = fastTemplate.template(dist, fastTemplate.convertVar(variables))
 	}
 
 	if encode {
@@ -158,16 +154,16 @@ func (l *HttpProtocolExecuteHandler) Execute(execCtx *entities.ExecContext, func
 	return err
 }
 
-func (l *HttpProtocolExecuteHandler) template(source string, keyWord string, value string) string {
-	arg0 := "{@" + keyWord + "}"
-	arg1 := "@" + keyWord
-	if strings.Contains(source, arg0) {
-		source = strings.Replace(source, arg0, value, -1)
-	}
-
-	//兼容老的替换方式
-	if strings.Contains(source, arg1) {
-		source = strings.Replace(source, arg1, value, -1)
-	}
-	return source
-}
+//func (l *HttpProtocolExecuteHandler) template(source string, keyWord string, value string) string {
+//	arg0 := "{@" + keyWord + "}"
+//	arg1 := "@" + keyWord
+//	if strings.Contains(source, arg0) {
+//		source = strings.Replace(source, arg0, value, -1)
+//	}
+//
+//	//兼容老的替换方式
+//	if strings.Contains(source, arg1) {
+//		source = strings.Replace(source, arg1, value, -1)
+//	}
+//	return source
+//}

@@ -23,6 +23,7 @@ import (
 	"auto-test-go/pkg/util"
 	"fmt"
 	lua "github.com/yuin/gopher-lua"
+	"strconv"
 )
 
 type BaseScripHandler struct {
@@ -45,7 +46,7 @@ type LuaScriptBaseHandler struct {
 func NewLuaScriptBaseHandler() (handler *LuaScriptBaseHandler, err error) {
 	handler = &LuaScriptBaseHandler{}
 	handler.Name = enum.LuaFuncName_DoBaseExecute
-	handler.FuncType = enum.LuaFuncType_DoBaseUserCaseExecute
+	handler.FuncType = enum.LuaFuncType_DoBaseExecute
 	handler.ScriptType = enum.ScriptType_LuaScript
 	err = handler.Init()
 	return handler, err
@@ -66,9 +67,48 @@ func (l LuaScriptBaseHandler) Execute(execCtx *entities.ExecContext, funcCtx *en
 
 func prepareLuaCtx(execCtx *entities.ExecContext) *lua.LTable {
 	table := lua.LTable{}
+	// "number", "", "function", "userdata", "thread", "table"
 	if execCtx.Variables != nil {
 		for k, v := range execCtx.Variables {
-			table.RawSet(lua.LString(k), lua.LString(v.Value))
+			if v.Object != nil {
+				switch v.Object.(type) {
+				case lua.LBool:
+					table.RawSet(lua.LString(k), v.Object.(lua.LBool))
+					break
+				case lua.LNumber:
+					table.RawSet(lua.LString(k), v.Object.(lua.LNumber))
+					break
+				case lua.LString:
+					table.RawSet(lua.LString(k), v.Object.(lua.LString))
+				case *lua.LTable:
+					subTable := v.Object.(*lua.LTable)
+					table.RawSet(lua.LString(k), subTable)
+				default:
+					table.RawSet(lua.LString(k), lua.LString(v.Value))
+				}
+			} else if v.Type != "" {
+				//外部指令传递的类型
+				switch v.Type {
+				case "boolean":
+					boolean, err := strconv.ParseBool(v.Value)
+					if err != nil {
+						table.RawSet(lua.LString(k), lua.LBool(boolean))
+					} else {
+						table.RawSet(lua.LString(k), lua.LString(v.Value))
+					}
+					break
+				case "number":
+					float, err := strconv.ParseFloat(v.Value, 32)
+					if err != nil {
+						table.RawSet(lua.LString(k), lua.LNumber(float))
+					}
+					break
+				default:
+					table.RawSet(lua.LString(k), lua.LString(v.Value))
+				}
+			} else {
+				table.RawSet(lua.LString(k), lua.LString(v.Value))
+			}
 		}
 	}
 	return &table

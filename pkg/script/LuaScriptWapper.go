@@ -55,6 +55,7 @@ func (l *LuaScriptWrapper) wrap(state *lua.LState, funcName string) {
 		state.PreloadModule("json", json.Loader)
 		break
 	case enum.LuaFuncName_DoHttpRequest:
+	case enum.LuaFuncName_DoCommonFunctionExecute:
 		state.PreloadModule("http", gluahttp.NewHttpModule(&http.Client{}).Loader)
 		state.PreloadModule("json", json.Loader)
 		break
