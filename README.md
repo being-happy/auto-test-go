@@ -20,7 +20,7 @@ This project is mainly used in interface automation as an execution engine. It i
 Dowload `auto-test-engine` project and build it.
 
 ```bash
-sh-3.2# https://github.com/gy09535/autotest.git
+sh-3.2# https://github.com/gy09535/auto-test-engine.git
 sh-3.2# go build -o ./output/auto-test-engine  ./cmd/engine/main.go
 sh-3.2# mkdir database
 sh-3.2# chmod 777 ./output/auto-test-engine database
