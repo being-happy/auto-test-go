@@ -21,9 +21,10 @@ Dowload `auto-test-engine` project and build it.
 
 ```bash
 sh-3.2# https://github.com/gy09535/autotest.git
-sh-3.2# go build -o ./app/output/auto-test-engine  ./app/cmd/engine/main.go
-sh-3.2# chmod 777 ./app/output/auto-test-engine
-sh-3.2# ./app/output/auto-test-engine
+sh-3.2# go build -o ./output/auto-test-engine  ./cmd/engine/main.go
+sh-3.2# mkdir database
+sh-3.2# chmod 777 ./output/auto-test-engine database
+sh-3.2# ./output/auto-test-engine
 ```
 
 Besides, you may pass a customized configuation while running a `auto-test-engine`. Supported
