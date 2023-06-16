@@ -18,13 +18,14 @@
 package entities
 
 type ScenarioCase struct {
-	Id           int64                  `json:"id"`
-	Name         string                 `json:"name"`
-	Parameters   []CaseParameter        `json:"parameters"`
-	Design       string                 `json:"design"`
-	UserCases    map[string]*UserCase   `json:"userCases"`
-	Baggages     map[string]*Baggage    `json:"baggages"`
-	Scripts      map[string]*BaseScript `json:"scripts"`
-	PreScripts   BaseScripts            `json:"preScripts"`
-	AfterScripts BaseScripts            `json:"afterScripts"`
+	Id              int64                  `json:"id"`
+	Name            string                 `json:"name"`
+	Parameters      []CaseParameter        `json:"parameters"`
+	Design          string                 `json:"design"`
+	UserCases       map[string]*UserCase   `json:"userCases"`
+	Baggages        map[string]*Baggage    `json:"baggages"`
+	Scripts         map[string]*BaseScript `json:"scripts"`
+	PreScripts      BaseScripts            `json:"preScripts"`
+	AfterScripts    BaseScripts            `json:"afterScripts"`
+	DependFunctions []string               `json:"dependFunctions"`
 }

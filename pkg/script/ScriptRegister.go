@@ -145,12 +145,20 @@ func buildScript(execCtx *entities.ExecContext, funcCtx *entities.FuncContext, f
 	return errors.New(log)
 }
 
+var commonFuncWapper = CommonFuncWapper{}
+
 func scriptExecute(funcName string, execCtx *entities.ExecContext, funcCtx *entities.FuncContext) error {
 	jIT, err := GetLuaJITWithRetry(execCtx, funcName)
 	if err != nil {
 		return err
 	}
+
 	defer DestroyedLuaPool(jIT)
+	err = commonFuncWapper.wrap(jIT, funcCtx.DependFunctions, execCtx)
+	if err != nil {
+		return err
+	}
+
 	log := fmt.Sprintf("[CaseScriptHandleRegister] Begin to execute Function name: %s, script: %s, parameters: %s", funcCtx.FuncName, funcCtx.FuncBody, execCtx.GetStringVariables())
 	execCtx.AddLogs(log)
 	util.Logger.Info(CombineLogInfo(log, execCtx))
