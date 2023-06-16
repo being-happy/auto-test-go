@@ -67,9 +67,10 @@ func (u ScriptDebuggerExecute) execScript(scriptType string, luaScript *entities
 	}
 
 	funcCtx := entities.FuncContext{
-		FuncBody:   luaScript.Script,
-		FuncType:   luaScript.FuncType,
-		ScriptType: enum.ScriptType_LuaScript,
+		FuncBody:     luaScript.Script,
+		FuncType:     luaScript.FuncType,
+		ScriptType:   enum.ScriptType_LuaScript,
+		CallFunction: luaScript.CallFunction,
 	}
 	var err error
 	switch scriptType {

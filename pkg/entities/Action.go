@@ -18,13 +18,15 @@
 package entities
 
 type LuaScript struct {
-	Script   string `json:"luaScript"`
-	FuncType string `json:"type"`
-	Host     string `json:"host"`
-	Port     string `json:"port"`
-	UserName string `json:"userName"`
-	Password string `json:"password"`
-	DbName   string `json:"dbName"`
+	Script          string   `json:"luaScript"`
+	FuncType        string   `json:"type"`
+	Host            string   `json:"host"`
+	Port            string   `json:"port"`
+	UserName        string   `json:"userName"`
+	Password        string   `json:"password"`
+	DbName          string   `json:"dbName"`
+	CallFunction    string   `json:"callFunction"`
+	DependFunctions []string `json:"dependFunctions"`
 }
 
 type SqlAuth struct {

@@ -76,7 +76,7 @@ func prepare() {
 	script.CaseRegister.Register(enum.ProtocolTypeHttp_DoRequest, enum.ScriptType_HttpCall, handler)
 
 	handler, err = script.NewCommonFuncDebuggerHandler()
-	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.LuaFuncName_DoCommonFunctionExecute, handler)
+	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.ScriptType_LuaScript, handler)
 
 	err = pkg.TaskDispatch.Init()
 	if err != nil {

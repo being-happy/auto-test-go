@@ -184,5 +184,7 @@ type FuncContext struct {
 	ScriptType string
 	FuncName   string
 	SqlAuth
-	Request BaseRequest
+	Request         BaseRequest
+	CallFunction    string
+	DependFunctions []string
 }

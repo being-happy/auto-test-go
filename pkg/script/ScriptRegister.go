@@ -126,8 +126,8 @@ func buildScript(execCtx *entities.ExecContext, funcCtx *entities.FuncContext, f
 		if functionName != enum.LuaFuncName_DoCommonFunctionExecute {
 			funcName = fmt.Sprintf("%s_%s_%s", functionName, execCtx.CaseId, execCtx.TaskId)
 		} else {
-			//通用函数不替换函数名
-			funcName = functionName
+			//通用函数不替换函数名为指令名称
+			funcName = funcCtx.CallFunction
 		}
 
 		funcScript := strings.Replace(function, "@functionName", funcName, -1)

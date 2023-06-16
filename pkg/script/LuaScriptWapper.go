@@ -51,19 +51,13 @@ func (l *LuaScriptWrapper) init() {
 
 func (l *LuaScriptWrapper) wrap(state *lua.LState, funcName string) {
 	switch funcName {
-	case enum.LuaFuncName_DoBaseExecute:
-		state.PreloadModule("json", json.Loader)
-		break
-	case enum.LuaFuncName_DoHttpRequest:
-	case enum.LuaFuncName_DoCommonFunctionExecute:
-		state.PreloadModule("http", gluahttp.NewHttpModule(&http.Client{}).Loader)
-		state.PreloadModule("json", json.Loader)
-		break
 	case enum.LuaFuncName_DoSqlExecute:
 		state.PreloadModule("json", json.Loader)
 		state.PreloadModule("mysql", mysql.Loader)
+		state.PreloadModule("http", gluahttp.NewHttpModule(&http.Client{}).Loader)
 		break
 	default:
 		state.PreloadModule("json", json.Loader)
+		state.PreloadModule("http", gluahttp.NewHttpModule(&http.Client{}).Loader)
 	}
 }
