@@ -3,24 +3,23 @@ package script
 import (
 	"auto-test-go/pkg/entities"
 	"fmt"
-	lua "github.com/yuin/gopher-lua"
 )
 
 type CommonFuncWapper struct {
 }
 
-func (CommonFuncWapper) wrap(state *lua.LState, functions []string, execCtx *entities.ExecContext) error {
+func (CommonFuncWapper) wrap(functions []string, execCtx *entities.ExecContext) string {
+	funcScripts := ""
 	if functions != nil && len(functions) > 0 {
 		for _, f := range functions {
-			err := state.DoString(f)
 			log := fmt.Sprintf("[CaseScriptHandleRegister] Begin to add common function : %s", f)
-			execCtx.AddLogs(log)
-			if err != nil {
-				log = fmt.Sprintf("[CaseScriptHandleRegister] Add common function to script error, script name: %s, error: %s", f, err.Error())
-				execCtx.AddLogs(log)
-				return err
+			if funcScripts != "" {
+				funcScripts = funcScripts + "\n" + f
+			} else {
+				funcScripts = f
 			}
+			execCtx.AddLogs(log)
 		}
 	}
-	return nil
+	return funcScripts
 }

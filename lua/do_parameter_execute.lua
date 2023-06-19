@@ -29,19 +29,18 @@ end
 
 @commonFunctions
 
-function inner_function_@functionName(ctx)
+function inner_function_@functionName(ctx, pre_value)
     local json = require("json")
+    local http = require("http")
     @funcBody
- end
+end
 
- function @functionName(ctx)
+function @functionName(ctx, pre_value)
     if type(ctx) ~= 'table' then
         print('input ctx is not a table, can not execute function')
         return
     end
 
-    local json = require("json")
-  --  add_log(ctx ,'script input ctx is:' .. json.encode(ctx))
-    inner_function_@functionName(ctx)
+    ctx.value = inner_function_@functionName(ctx, pre_value)
     return ctx
 end

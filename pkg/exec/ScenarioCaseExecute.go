@@ -80,8 +80,8 @@ func (ScenarioCaseExecute) ScenarioCaseValidation(execCtx *entities.ExecContext)
 }
 
 func copyDenpendFunctions(dependFunctions []string, scripts entities.BaseScripts) {
-	for _, s := range scripts {
-		s.Script.DependFunctions = dependFunctions
+	for i, _ := range scripts {
+		scripts[i].Script.DependFunctions = dependFunctions
 	}
 }
 

@@ -31,41 +31,15 @@ import (
 
 func prepare() {
 	util.Init()
-	var handler script.IScriptHandler
+	script.CaseRegister.Register(enum.LuaFuncType_DoBaseExecute, enum.ScriptType_LuaScript, script.NewLuaScriptBaseHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoHttpRequest, enum.ScriptType_LuaScript, script.NewLuaScriptDoHttpCallHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoSqlExecute, enum.ScriptType_LuaScript, script.NewLuaScriptSqlHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_AssertUserCase, enum.ScriptType_LuaScript, script.NewLuaScriptAssertHandler())
+	script.CaseRegister.Register(enum.ProtocolTypeHttp_DoRequest, enum.ScriptType_HttpCall, script.NewHttpProtocolExecuteHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.ScriptType_LuaScript, script.NewCommonFuncDebuggerHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoParamExecute, enum.ScriptType_LuaScript, script.NewLuaScriptDoParamHandler())
 
-	handler, err := script.NewLuaScriptBaseHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.LuaFuncType_DoBaseExecute, enum.ScriptType_LuaScript, handler)
-
-	handler, err = script.NewLuaScriptDoHttpCallHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.LuaFuncType_DoHttpRequest, enum.ScriptType_LuaScript, handler)
-
-	handler, err = script.NewLuaScriptSqlHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.LuaFuncType_DoSqlExecute, enum.ScriptType_LuaScript, handler)
-
-	handler, err = script.NewLuaScriptAssertHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.LuaFuncType_AssertUserCase, enum.ScriptType_LuaScript, handler)
-
-	handler, err = script.NewHttpProtocolExecuteHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.ProtocolTypeHttp_DoRequest, enum.ScriptType_HttpCall, handler)
-
-	handler, err = script.NewCommonFuncDebuggerHandler()
-	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.ScriptType_LuaScript, handler)
-	err = pkg.TaskDispatch.Init()
+	err := pkg.TaskDispatch.Init()
 	if err != nil {
 		panic(err)
 	}
@@ -73,8 +47,9 @@ func prepare() {
 
 func main() {
 	prepare()
-	scriptDebuggerFunctionTest()
-	//scenariorTest()
+	//scriptDebuggerFunctionTest()
+	//userCaseTest()
+	scenariorTest()
 	os.Setenv("NACOS_ADDRESS", "dev-nacos.hgj.net")
 	os.Setenv("NACOS_PORT", "80")
 	os.Setenv("GROUP_NAME", "03a1c325-7c9b-41bf-b4f6-404a0cf22d5a")
@@ -99,7 +74,7 @@ func scriptDebuggerTest() {
 				Value: "15",
 			}, {
 				Name:  "host",
-				Value: "dev-apisix.hgj.com",
+				Value: "127.0.0.1",
 			},
 		},
 		BaseScript: entities.BaseScript{
@@ -134,7 +109,7 @@ func scriptDebuggerFunctionTest() {
 				Value: "15",
 			}, {
 				Name:  "host",
-				Value: "dev-apisix.hgj.com",
+				Value: "127.0.0.1",
 			},
 		},
 		BaseScript: entities.BaseScript{
@@ -153,6 +128,7 @@ func scriptDebuggerFunctionTest() {
 	factory := director.BaseDirectorFactory{}.Create(enum.DirectorType_ScriptDebugger)
 	factory.Action(&execCommand, false)
 }
+
 func userCaseTest() {
 	execCommand := command.SingleUserCaseExecuteCommand{
 		Name:        "test command",
@@ -173,8 +149,11 @@ func userCaseTest() {
 					Value: "15",
 				}, {
 					Name:  "host",
-					Value: "dev-apisix.hgj.com",
+					Value: "127.0.0.1",
 				},
+			},
+			DependFunctions: []string{
+				"function hello_world(func_name)\n    print(\"hello function:\" .. func_name)\nend",
 			},
 			PreScripts: entities.BaseScripts([]entities.BaseScript{
 				{
@@ -183,7 +162,8 @@ func userCaseTest() {
 					Script: entities.LuaScript{
 						FuncType: enum.LuaFuncType_DoBaseExecute,
 						Script: "print(ctx.name) \n " +
-							" print(ctx.message)",
+							" print(ctx.message)\n" +
+							"hello_world('first function')",
 					},
 				}, {
 					ScriptType: enum.ScriptType_LuaScript,
@@ -198,14 +178,14 @@ func userCaseTest() {
 					Order:      0,
 					Script: entities.LuaScript{
 						FuncType: enum.LuaFuncType_DoHttpRequest,
-						Script: "  local response, error_message = http.get(\"https://dev-apisix.hgj.com/mixmicro-demo/mock/latbox-test\")\n  " +
+						Script: "  local response, error_message = http.get(\"https://127.0.0.1/-demo/mock/latbox-test\")\n  " +
 							"if error_message  then\n    " +
 							"   print(\"http request call fail:\" .. error_message)\n    end\n  " +
 							"  if response.body ~=nil and response.status_code==200 then\n    " +
 							"   local my_body = json.decode(response.body)\n      " +
 							"   ctx.message = my_body.message\n   " +
 							" else\n     " +
-							"   print(\"response code is :\" .. response.status_code .. \", url: https://dev-apisix.hgj.com/mixmicro-demo/mock/latbox-test\")\n  " +
+							"   print(\"response code is :\" .. response.status_code .. \", url: https://127.0.0.1/-demo/mock/latbox-test\")\n  " +
 							" end",
 					},
 				}, {
@@ -214,11 +194,11 @@ func userCaseTest() {
 					Script: entities.LuaScript{
 						FuncType: enum.LuaFuncType_DoSqlExecute,
 						DbName:   "ops-bata",
-						Host:     "dev-middle.hgj.net",
+						Host:     "127.0.0.1",
 						Port:     "3306",
-						UserName: "basicservice",
-						Password: "I5zkS03lvDfljK0Gvrrj",
-						Script: "  local resp, err = c:query(\"SELECT * FROM service_config WHERE  service_name='mixmicro-ops-api'\")\n " +
+						UserName: "127.0.0.1",
+						Password: "Password",
+						Script: "  local resp, err = c:query(\"SELECT * FROM table_name WHERE  service_name='-ops-api'\")\n " +
 							"  if err then\n     " +
 							" add_log(ctx, err)\n   " +
 							"else\n     " +
@@ -234,11 +214,11 @@ func userCaseTest() {
 					Script: entities.LuaScript{
 						FuncType: enum.LuaFuncType_DoSqlExecute,
 						DbName:   "ops-bata",
-						Host:     "dev-middle.hgj.net",
+						Host:     "127.0.0.1",
 						Port:     "3306",
-						UserName: "basicservice",
-						Password: "I5zkS03lvDfljK0Gvrrj",
-						Script: "  local resp, err = c:query(\"update service_config set project_id =1  WHERE  id = 191\")\n " +
+						UserName: "127.0.0.1",
+						Password: "Password",
+						Script: "  local resp, err = c:query(\"update table_name set project_id =1  WHERE  id = 191\")\n " +
 							"  if err then\n     " +
 							" add_log(ctx, err)\n   " +
 							"else\n     " +
@@ -267,7 +247,7 @@ func userCaseTest() {
 				},
 			}),
 			Request: entities.BaseRequest{
-				Url:     "https://@host/mixmicro-demo/mock/latbox-test",
+				Url:     "https://@host/-demo/mock/latbox-test",
 				Method:  "GET",
 				Timeout: 30,
 			},
@@ -303,7 +283,7 @@ func batchUserCaseTest() {
 						Value: "15",
 					}, {
 						Name:  "host",
-						Value: "dev-apisix.hgj.com",
+						Value: "127.0.0.1",
 					},
 				},
 				PreScripts: entities.BaseScripts([]entities.BaseScript{
@@ -328,14 +308,14 @@ func batchUserCaseTest() {
 						Order:      0,
 						Script: entities.LuaScript{
 							FuncType: enum.LuaFuncType_DoHttpRequest,
-							Script: "  local response, error_message = http.get(\"https://dev-apisix.hgj.com/mixmicro-demo/mock/latbox-test\")\n  " +
+							Script: "  local response, error_message = http.get(\"https://127.0.0.1/-demo/mock/latbox-test\")\n  " +
 								"if error_message  then\n    " +
 								"   print(\"http request call fail:\" .. error_message)\n    end\n  " +
 								"  if response.body ~=nil and response.status_code==200 then\n    " +
 								"   local my_body = json.decode(response.body)\n      " +
 								"   ctx.message = my_body.message\n   " +
 								" else\n     " +
-								"   print(\"response code is :\" .. response.status_code .. \", url: https://dev-apisix.hgj.com/mixmicro-demo/mock/latbox-test\")\n  " +
+								"   print(\"response code is :\" .. response.status_code .. \", url: https://127.0.0.1/-demo/mock/latbox-test\")\n  " +
 								" end",
 						},
 					}, {
@@ -344,11 +324,11 @@ func batchUserCaseTest() {
 						Script: entities.LuaScript{
 							FuncType: enum.LuaFuncType_DoSqlExecute,
 							DbName:   "ops-bata",
-							Host:     "dev-middle.hgj.net",
+							Host:     "127.0.0.1",
 							Port:     "3306",
-							UserName: "basicservice",
-							Password: "I5zkS03lvDfljK0Gvrrj",
-							Script: "  local resp, err = c:query(\"SELECT * FROM service_config WHERE  service_name='mixmicro-ops-api'\")\n " +
+							UserName: "127.0.0.1",
+							Password: "Password",
+							Script: "  local resp, err = c:query(\"SELECT * FROM table_name WHERE  service_name='-ops-api'\")\n " +
 								"  if err then\n     " +
 								" add_log(ctx, err)\n   " +
 								"else\n     " +
@@ -364,11 +344,11 @@ func batchUserCaseTest() {
 						Script: entities.LuaScript{
 							FuncType: enum.LuaFuncType_DoSqlExecute,
 							DbName:   "ops-bata",
-							Host:     "dev-middle.hgj.net",
+							Host:     "127.0.0.1",
 							Port:     "3306",
-							UserName: "basicservice",
-							Password: "I5zkS03lvDfljK0Gvrrj",
-							Script: "  local resp, err = c:query(\"update service_config set project_id =1  WHERE  id = 191\")\n " +
+							UserName: "127.0.0.1",
+							Password: "Password",
+							Script: "  local resp, err = c:query(\"update table_name set project_id =1  WHERE  id = 191\")\n " +
 								"  if err then\n     " +
 								" add_log(ctx, err)\n   " +
 								"else\n     " +
@@ -404,7 +384,7 @@ func batchUserCaseTest() {
 					},
 				}),
 				Request: entities.BaseRequest{
-					Url:     "https://@host/mixmicro-demo/mock/latbox-test",
+					Url:     "https://@host/-demo/mock/latbox-test",
 					Method:  "GET",
 					Timeout: 30,
 				},
@@ -443,7 +423,7 @@ func scenariorTest() {
 					Value: "15",
 				}, {
 					Name:  "host",
-					Value: "dev-apisix.hgj.com",
+					Value: "127.0.0.1",
 				},
 			},
 			PreScripts: entities.BaseScripts([]entities.BaseScript{
@@ -481,7 +461,7 @@ func scenariorTest() {
 						Value: "15",
 					}, {
 						Name:  "host",
-						Value: "dev-apisix.hgj.com",
+						Value: "127.0.0.1",
 					},
 				},
 				Assert: entities.LuaScript{
@@ -491,7 +471,7 @@ func scenariorTest() {
 						"ctx.stop=false",
 				},
 				Request: entities.BaseRequest{
-					Url:     "https://@host/mixmicro-demo/mock/latbox-test",
+					Url:     "https://@host/-demo/mock/latbox-test",
 					Method:  "GET",
 					Timeout: 30,
 				},
@@ -511,7 +491,7 @@ func scenariorTest() {
 							Value: "15",
 						}, {
 							Name:  "host",
-							Value: "dev-apisix.hgj.com",
+							Value: "127.0.0.1",
 						},
 					},
 					Assert: entities.LuaScript{
@@ -521,7 +501,7 @@ func scenariorTest() {
 							"ctx.stop=false",
 					},
 					Request: entities.BaseRequest{
-						Url:     "https://@host/mixmicro-demo/mock/latbox-test",
+						Url:     "https://@host/-demo/mock/latbox-test",
 						Method:  "GET",
 						Timeout: 30,
 					},
@@ -539,7 +519,7 @@ func scenariorTest() {
 				},
 			},
 			Design: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<scenario-flow>\n   " +
-				" <user-case case-id=\"1\" case-name=\"GET http://dev-next-manage.hgj.net/mixmicro-ops-api/v1/workbench/buildStatByGroupMonth?status==&month=6 [55700]\" order=\"1\" />\n   " +
+				" <user-case case-id=\"1\" case-name=\"GET http://127.0.0.1/-ops-api/v1/workbench/buildStatByGroupMonth?status==&month=6 [55700]\" order=\"1\" />\n   " +
 				" <user-case case-id=\"2\" case-name=\"helloword\" order=\"2\" />\n  " +
 				"  <time-wait-case wait-time=\"1\" order =\"3\" />\n   " +
 				" <script-case script-id =\"1\" script-type =\"ScriptType_LuaScript\" order=\"4\"/>\n   " +

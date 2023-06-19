@@ -20,6 +20,7 @@ package main
 import (
 	"auto-test-go/pkg/driver/gluaredis"
 	"fmt"
+
 	lua "github.com/yuin/gopher-lua"
 )
 
@@ -51,7 +52,7 @@ func main() {
            if ok then
                print('close success');
            end
-`, "dev-middle.hgj.net", "6379", 11, "123456")
+`, "127.0.0.1", "6379", 11, "123456")
 	err := L.DoString(script)
 	if err != nil {
 		fmt.Println(err.Error())

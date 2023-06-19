@@ -132,6 +132,7 @@ func buildScript(execCtx *entities.ExecContext, funcCtx *entities.FuncContext, f
 
 		funcScript := strings.Replace(function, "@functionName", funcName, -1)
 		funcScript = strings.Replace(funcScript, "@funcBody", funcCtx.FuncBody, -1)
+		funcScript = strings.Replace(funcScript, "@commonFunctions", commonFuncWapper.wrap(funcCtx.DependFunctions, execCtx), -1)
 		funcCtx.FuncBody = funcScript
 		log = fmt.Sprintf("[CaseScriptHandleRegister] Current user case script build success,function name: %s,scripts: %s", funcName, funcCtx.FuncBody)
 		util.Logger.Info(log)
@@ -154,11 +155,6 @@ func scriptExecute(funcName string, execCtx *entities.ExecContext, funcCtx *enti
 	}
 
 	defer DestroyedLuaPool(jIT)
-	err = commonFuncWapper.wrap(jIT, funcCtx.DependFunctions, execCtx)
-	if err != nil {
-		return err
-	}
-
 	log := fmt.Sprintf("[CaseScriptHandleRegister] Begin to execute Function name: %s, script: %s, parameters: %s", funcCtx.FuncName, funcCtx.FuncBody, execCtx.GetStringVariables())
 	execCtx.AddLogs(log)
 	util.Logger.Info(CombineLogInfo(log, execCtx))

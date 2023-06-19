@@ -15,6 +15,7 @@
 -- limitations under the License.
 --
 
+
 function add_log(ctx, log)
      if not ctx then
          print(log)
@@ -26,6 +27,8 @@ function add_log(ctx, log)
          ctx.inner_log = ctx.inner_log .. log .. '\n'
          print(log)
  end
+
+@commonFunctions
 
  function inner_function_@functionName(ctx)
      local json = require("json")

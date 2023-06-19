@@ -34,13 +34,16 @@ type HttpProtocolExecuteHandler struct {
 	BaseScripHandler
 }
 
-func NewHttpProtocolExecuteHandler() (*HttpProtocolExecuteHandler, error) {
+func NewHttpProtocolExecuteHandler() *HttpProtocolExecuteHandler {
 	handler := HttpProtocolExecuteHandler{}
 	handler.Name = enum.ProtocolTypeHttp_DoRequest
 	handler.ScriptType = enum.ScriptType_HttpCall
 	handler.FuncType = enum.ProtocolTypeHttp_DoRequest
 	err := handler.Init()
-	return &handler, err
+	if err != nil {
+		panic(err)
+	}
+	return &handler
 }
 
 func (l *HttpProtocolExecuteHandler) Init() error {

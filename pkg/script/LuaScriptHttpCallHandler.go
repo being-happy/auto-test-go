@@ -27,13 +27,16 @@ type LuaScriptHttpCallHandler struct {
 	function string
 }
 
-func NewLuaScriptDoHttpCallHandler() (*LuaScriptHttpCallHandler, error) {
+func NewLuaScriptDoHttpCallHandler() *LuaScriptHttpCallHandler {
 	handler := LuaScriptHttpCallHandler{}
 	handler.Name = enum.LuaFuncType_DoHttpRequest
 	handler.ScriptType = enum.ScriptType_LuaScript
 	handler.FuncType = enum.LuaFuncType_DoHttpRequest
 	err := handler.Init()
-	return &handler, err
+	if err != nil {
+		panic(err)
+	}
+	return &handler
 }
 
 func (l *LuaScriptHttpCallHandler) Init() error {

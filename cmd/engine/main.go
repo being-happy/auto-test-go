@@ -43,42 +43,15 @@ func main() {
 
 func prepare() {
 	util.Init()
-	var handler script.IScriptHandler
+	script.CaseRegister.Register(enum.LuaFuncType_DoBaseExecute, enum.ScriptType_LuaScript, script.NewLuaScriptBaseHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoHttpRequest, enum.ScriptType_LuaScript, script.NewLuaScriptDoHttpCallHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoSqlExecute, enum.ScriptType_LuaScript, script.NewLuaScriptSqlHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_AssertUserCase, enum.ScriptType_LuaScript, script.NewLuaScriptAssertHandler())
+	script.CaseRegister.Register(enum.ProtocolTypeHttp_DoRequest, enum.ScriptType_HttpCall, script.NewHttpProtocolExecuteHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.ScriptType_LuaScript, script.NewCommonFuncDebuggerHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoParamExecute, enum.ScriptType_LuaScript, script.NewLuaScriptDoParamHandler())
 
-	handler, err := script.NewLuaScriptBaseHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.LuaFuncType_DoBaseExecute, enum.ScriptType_LuaScript, handler)
-
-	handler, err = script.NewLuaScriptDoHttpCallHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.LuaFuncType_DoHttpRequest, enum.ScriptType_LuaScript, handler)
-
-	handler, err = script.NewLuaScriptSqlHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.LuaFuncType_DoSqlExecute, enum.ScriptType_LuaScript, handler)
-
-	handler, err = script.NewLuaScriptAssertHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.LuaFuncType_AssertUserCase, enum.ScriptType_LuaScript, handler)
-
-	handler, err = script.NewHttpProtocolExecuteHandler()
-	if err != nil {
-		panic(err)
-	}
-	script.CaseRegister.Register(enum.ProtocolTypeHttp_DoRequest, enum.ScriptType_HttpCall, handler)
-
-	handler, err = script.NewCommonFuncDebuggerHandler()
-	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.ScriptType_LuaScript, handler)
-
-	err = pkg.TaskDispatch.Init()
+	err := pkg.TaskDispatch.Init()
 	if err != nil {
 		panic(err)
 	}

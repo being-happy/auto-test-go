@@ -24,6 +24,7 @@ const (
 	Resp_Invalid                        int = 400
 	ProtocolTypeHttp_DoRequest              = "ProtocolTypeHttp_DoRequest"
 	LuaFuncType_DoHttpRequest               = "LuaFuncType_DoHttpRequest"
+	LuaFuncType_DoParamExecute              = "LuaFuncType_DoParamExecute"
 	LuaFuncType_DoSqlExecute                = "LuaFuncType_DoSqlExecute"
 	LuaFuncType_AssertUserCase              = "LuaFuncType_AssertUserCase"
 	LuaFuncType_DoBaseExecute               = "LuaFuncType_DoBaseExecute"
@@ -33,6 +34,7 @@ const (
 	LuaFuncName_AssertUserCase              = "assert_user_case_execute"
 	LuaFuncName_DoBaseExecute               = "do_base_execute"
 	LuaFuncName_DoCommonFunctionExecute     = "do_common_function_execute"
+	LuaFuncName_DoParamExecute              = "do_parameter_execute"
 	ScriptType_LuaScript                    = "ScriptType_LuaScript"
 	ScriptType_SqlScript                    = "ScriptType_SqlScript"
 	ScriptType_HttpCall                     = "ScriptType_HttpCall"
