@@ -43,13 +43,16 @@ type LuaScriptBaseHandler struct {
 	function string
 }
 
-func NewLuaScriptBaseHandler() (handler *LuaScriptBaseHandler, err error) {
+func NewLuaScriptBaseHandler() (handler *LuaScriptBaseHandler) {
 	handler = &LuaScriptBaseHandler{}
 	handler.Name = enum.LuaFuncName_DoBaseExecute
 	handler.FuncType = enum.LuaFuncType_DoBaseExecute
 	handler.ScriptType = enum.ScriptType_LuaScript
-	err = handler.Init()
-	return handler, err
+	err := handler.Init()
+	if err != nil {
+		panic(err)
+	}
+	return handler
 }
 
 func (l *LuaScriptBaseHandler) Init() (err error) {

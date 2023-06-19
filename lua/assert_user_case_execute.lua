@@ -27,6 +27,8 @@ function add_log(ctx, log)
          print(log)
 end
 
+@commonFunctions
+
 function inner_function_@functionName(ctx, resp ,code)
     local json = require("json")
     @funcBody

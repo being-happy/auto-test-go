@@ -30,13 +30,16 @@ type LuaScriptSqlHandler struct {
 	function string
 }
 
-func NewLuaScriptSqlHandler() (*LuaScriptSqlHandler, error) {
+func NewLuaScriptSqlHandler() *LuaScriptSqlHandler {
 	handler := LuaScriptSqlHandler{}
 	handler.Name = enum.LuaFuncType_DoSqlExecute
 	handler.ScriptType = enum.ScriptType_LuaScript
 	handler.FuncType = enum.LuaFuncType_DoSqlExecute
 	err := handler.Init()
-	return &handler, err
+	if err != nil {
+		panic(err)
+	}
+	return &handler
 }
 
 func (l *LuaScriptSqlHandler) Init() error {

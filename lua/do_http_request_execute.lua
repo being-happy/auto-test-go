@@ -27,6 +27,8 @@
           print(log)
  end
 
+@commonFunctions
+
  function inner_function_@functionName(ctx)
      local json = require("json")
      local http = require("http")

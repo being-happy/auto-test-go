@@ -10,13 +10,16 @@ type LuaScriptFuncDebuggerHandler struct {
 	function string
 }
 
-func NewCommonFuncDebuggerHandler() (handler *LuaScriptFuncDebuggerHandler, err error) {
+func NewCommonFuncDebuggerHandler() (handler *LuaScriptFuncDebuggerHandler) {
 	handler = &LuaScriptFuncDebuggerHandler{}
 	handler.Name = enum.LuaFuncName_DoCommonFunctionExecute
 	handler.FuncType = enum.LuaFuncType_DoFuncExecute
 	handler.ScriptType = enum.ScriptType_LuaScript
-	err = handler.Init()
-	return handler, err
+	err := handler.Init()
+	if err != nil {
+		panic(err)
+	}
+	return handler
 }
 
 func (l *LuaScriptFuncDebuggerHandler) Init() (err error) {

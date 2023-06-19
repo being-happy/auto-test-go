@@ -41,6 +41,11 @@ func (u ScenarioCaseExecute) DoWork(scenariorCase *entities.ScenarioCase, ctx *e
 
 	var log string
 	// execute before script
+	if scenariorCase.DependFunctions != nil {
+		copyDenpendFunctions(scenariorCase.DependFunctions, scenariorCase.PreScripts)
+		copyDenpendFunctions(scenariorCase.DependFunctions, scenariorCase.AfterScripts)
+	}
+
 	if scenariorCase.PreScripts != nil && len(scenariorCase.PreScripts) > 0 {
 		sort.Sort(scenariorCase.PreScripts)
 		scriptStr, _ := json.Marshal(scenariorCase.PreScripts)
@@ -74,6 +79,12 @@ func (ScenarioCaseExecute) ScenarioCaseValidation(execCtx *entities.ExecContext)
 	return nil
 }
 
+func copyDenpendFunctions(dependFunctions []string, scripts entities.BaseScripts) {
+	for i, _ := range scripts {
+		scripts[i].Script.DependFunctions = dependFunctions
+	}
+}
+
 func executeFlow(scenariorCase *entities.ScenarioCase, flows entities.Flows, parentContext *entities.ExecContext, scenariorContext *entities.ScenarioContext) {
 	//上下文的id 由父节点的id 开始一次向下递增
 	for _, flow := range flows {
@@ -95,6 +106,11 @@ func executeFlow(scenariorCase *entities.ScenarioCase, flows entities.Flows, par
 				util.Logger.Error(log)
 				parentContext.SetStop()
 				break
+			}
+
+			if scenariorCase.DependFunctions != nil {
+				//复制通用函数到用例中
+				userCase.DependFunctions = scenariorCase.DependFunctions
 			}
 
 			execute := UserCaseExecute{}
@@ -138,6 +154,11 @@ func executeFlow(scenariorCase *entities.ScenarioCase, flows entities.Flows, par
 				util.Logger.Error(log)
 				parentContext.SetStop()
 				break
+			}
+
+			if scenariorCase.DependFunctions != nil {
+				//复制通用函数到脚本中
+				script.Script.DependFunctions = scenariorCase.DependFunctions
 			}
 			scriptContext := parentContext.Copy()
 			scriptContext.Name = "ScriptContext"

@@ -18,15 +18,16 @@
 package entities
 
 type UserCase struct {
-	Name         string          `json:"name"`
-	Id           int64           `json:"id"`
-	Request      BaseRequest     `json:"request"`
-	Parameters   []CaseParameter `json:"parameters"`
-	PreScripts   BaseScripts     `json:"preScripts"`
-	AfterScripts BaseScripts     `json:"afterScripts"`
-	Assert       LuaScript       `json:"assert"`
-	IsSkipError  bool            `json:"isSkipError"`
-	TextAsserts  []TextAssert    `json:"textAsserts"`
+	Name            string          `json:"name"`
+	Id              int64           `json:"id"`
+	Request         BaseRequest     `json:"request"`
+	Parameters      []CaseParameter `json:"parameters"`
+	PreScripts      BaseScripts     `json:"preScripts"`
+	AfterScripts    BaseScripts     `json:"afterScripts"`
+	Assert          LuaScript       `json:"assert"`
+	IsSkipError     bool            `json:"isSkipError"`
+	TextAsserts     []TextAssert    `json:"textAsserts"`
+	DependFunctions []string        `json:"dependFunctions"`
 }
 
 type TextAssert struct {

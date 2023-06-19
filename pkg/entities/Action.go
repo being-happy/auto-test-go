@@ -26,7 +26,7 @@ type LuaScript struct {
 	Password        string   `json:"password"`
 	DbName          string   `json:"dbName"`
 	CallFunction    string   `json:"callFunction"`
-	DependFunctions []string `json:"dependFunctions"`
+	DependFunctions []string `json:"-"`
 }
 
 type SqlAuth struct {
@@ -44,7 +44,7 @@ func (sqlScript *LuaScript) ValidScript() bool {
 	return true
 }
 
-func (sqlScript *LuaScript) CopyToFuncContext(ctx *FuncContext) {
+func (sqlScript *LuaScript) CopySqlToFuncContext(ctx *FuncContext) {
 	ctx.UserName = sqlScript.UserName
 	ctx.Password = sqlScript.Password
 	ctx.Host = sqlScript.Host

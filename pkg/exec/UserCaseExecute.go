@@ -42,6 +42,11 @@ func (u UserCaseExecute) DoWork(userCase *entities.UserCase, ctx *entities.ExecC
 
 	var log string
 	// execute before script
+	if userCase.DependFunctions != nil {
+		copyDenpendFunctions(userCase.DependFunctions, userCase.PreScripts)
+		copyDenpendFunctions(userCase.DependFunctions, userCase.AfterScripts)
+	}
+
 	if userCase.PreScripts != nil && len(userCase.PreScripts) > 0 {
 		sort.Sort(userCase.PreScripts)
 		scriptStr, _ := json.Marshal(userCase.PreScripts)

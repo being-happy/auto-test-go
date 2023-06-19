@@ -27,13 +27,16 @@ type LuaScriptAssertHandler struct {
 	function string
 }
 
-func NewLuaScriptAssertHandler() (*LuaScriptAssertHandler, error) {
+func NewLuaScriptAssertHandler() *LuaScriptAssertHandler {
 	handler := LuaScriptAssertHandler{}
 	handler.Name = enum.LuaFuncName_AssertUserCase
 	handler.ScriptType = enum.ScriptType_LuaScript
 	handler.FuncType = enum.LuaFuncType_AssertUserCase
 	err := handler.Init()
-	return &handler, err
+	if err != nil {
+		panic(err)
+	}
+	return &handler
 }
 
 func (l *LuaScriptAssertHandler) Init() error {
