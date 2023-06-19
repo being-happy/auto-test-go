@@ -1,4 +1,7 @@
+
 # Auto Test Engine
+![Auto Assign](https://github.com/being-happy/demo-repository/actions/workflows/auto-assign.yml/badge.svg)
+![Proof HTML](https://github.com/being-happy/demo-repository/actions/workflows/proof-html.yml/badge.svg)
 
 <img  src="doc/pictures/ate-logo.png" width="50%" syt height="40%">
 
