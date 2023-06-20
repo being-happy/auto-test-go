@@ -198,11 +198,3 @@ Please follow the [REPORTING GUIDELINES](https://www.apache.org/foundation/polic
 
 # License
 [Apache 2.0 License.](LICENSE)
-
-## Contact Us
-
-* WeChat Group: At present, only personal WeChat contact is performed, users can add WeChat friends, and the relevant WeChat group will be pulled later.
-
-<div>
-<img  src="doc/pictures/contact.jpeg" width="20%" syt height="30%">
-</div>
