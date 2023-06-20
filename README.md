@@ -23,7 +23,7 @@ This project is mainly used in interface automation as an execution engine. It i
 Dowload `auto-test-engine` project and build it.
 
 ```bash
-sh-3.2# https://github.com/gy09535/auto-test-engine.git
+sh-3.2# https://github.com/being-happy/auto-test-engine.git
 sh-3.2# go build -o ./output/auto-test-engine  ./cmd/engine/main.go
 sh-3.2# mkdir database
 sh-3.2# chmod 777 ./output/auto-test-engine database
@@ -198,11 +198,3 @@ Please follow the [REPORTING GUIDELINES](https://www.apache.org/foundation/polic
 
 # License
 [Apache 2.0 License.](LICENSE)
-
-## Contact Us
-
-* WeChat Group: At present, only personal WeChat contact is performed, users can add WeChat friends, and the relevant WeChat group will be pulled later.
-
-<div>
-<img  src="doc/pictures/contact.jpeg" width="20%" syt height="30%">
-</div>
