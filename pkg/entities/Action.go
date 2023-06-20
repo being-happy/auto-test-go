@@ -60,9 +60,10 @@ type HttpCall struct {
 }
 
 type CaseParameter struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
-	PType string `json:"pType"`
+	Name   string     `json:"name"`
+	Value  string     `json:"value"`
+	PType  string     `json:"pType"`
+	Script BaseScript `json:"script"`
 }
 
 type BaseScript struct {

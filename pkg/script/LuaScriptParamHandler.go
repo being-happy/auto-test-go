@@ -10,8 +10,8 @@ type LuaScriptParamHandler struct {
 	function string
 }
 
-func NewLuaScriptDoParamHandler() *LuaScriptHttpCallHandler {
-	handler := LuaScriptHttpCallHandler{}
+func NewLuaScriptDoParamHandler() *LuaScriptParamHandler {
+	handler := LuaScriptParamHandler{}
 	handler.Name = enum.LuaFuncType_DoParamExecute
 	handler.ScriptType = enum.ScriptType_LuaScript
 	handler.FuncType = enum.LuaFuncType_DoParamExecute
