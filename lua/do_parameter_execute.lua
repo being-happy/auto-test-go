@@ -35,12 +35,12 @@ function inner_function_@functionName(ctx, pre_value)
     @funcBody
 end
 
-function @functionName(ctx, pre_value)
+function @functionName(ctx)
     if type(ctx) ~= 'table' then
         print('input ctx is not a table, can not execute function')
         return
     end
 
-    ctx.value = inner_function_@functionName(ctx, pre_value)
+    ctx.return_value = inner_function_@functionName(ctx, ctx.pre_value)
     return ctx
 end

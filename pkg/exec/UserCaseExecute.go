@@ -47,6 +47,7 @@ func (u UserCaseExecute) DoWork(userCase *entities.UserCase, ctx *entities.ExecC
 		copyDenpendFunctions(userCase.DependFunctions, userCase.AfterScripts)
 	}
 
+	prepareParameters(userCase.Parameters, ctx, userCase.DependFunctions)
 	if userCase.PreScripts != nil && len(userCase.PreScripts) > 0 {
 		sort.Sort(userCase.PreScripts)
 		scriptStr, _ := json.Marshal(userCase.PreScripts)
@@ -152,4 +153,24 @@ func (u UserCaseExecute) UserCaseValidation(execCtx *entities.ExecContext, userC
 		return errors.New("[UserCaseExecute] HttpRequest lost parameters")
 	}
 	return nil
+}
+
+func prepareParameters(parameters []entities.CaseParameter, ctx *entities.ExecContext, dependFunctions []string) {
+	//todo resolve script to parameter
+	for _, v := range parameters {
+		if v.PType == "script" {
+			ctx.Variables["pre_value"] = entities.VarValue{
+				Value: v.Value,
+			}
+
+			v.Script.Script.DependFunctions = dependFunctions
+			ScriptDebuggerExecute{}.DoWork(&v.Script, ctx)
+			if ctx.Status != entities.Failed {
+				aim := ctx.Variables[v.Name]
+				aim.Value = ctx.Variables["return_value"].Value
+				aim.Object = aim.Value
+				ctx.Variables[v.Name] = aim
+			}
+		}
+	}
 }

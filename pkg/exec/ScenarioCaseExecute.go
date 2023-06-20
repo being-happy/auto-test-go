@@ -46,6 +46,7 @@ func (u ScenarioCaseExecute) DoWork(scenariorCase *entities.ScenarioCase, ctx *e
 		copyDenpendFunctions(scenariorCase.DependFunctions, scenariorCase.AfterScripts)
 	}
 
+	prepareParameters(scenariorCase.Parameters, ctx.Self, scenariorCase.DependFunctions)
 	if scenariorCase.PreScripts != nil && len(scenariorCase.PreScripts) > 0 {
 		sort.Sort(scenariorCase.PreScripts)
 		scriptStr, _ := json.Marshal(scenariorCase.PreScripts)
