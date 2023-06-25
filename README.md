@@ -3,7 +3,7 @@
 ![Auto Assign](https://github.com/being-happy/demo-repository/actions/workflows/auto-assign.yml/badge.svg)
 ![Proof HTML](https://github.com/being-happy/demo-repository/actions/workflows/proof-html.yml/badge.svg)
 
-<img  src="doc/pictures/ate-logo.png" width="50%" syt height="40%">
+<img  src="docs/diagrams/ate_logo.png" width="50%" syt height="40%">
 
 ## Introduction
 This project is mainly used in interface automation as an execution engine. It includes the following functions.
@@ -14,7 +14,7 @@ This project is mainly used in interface automation as an execution engine. It i
 - Currently, only the http transport protocol is supported, and GRPC is planned.
 - NACOS is supported as a registry.
 
-<img  src="doc/pictures/auto-test-framework.png" width="50%" syt height="40%">
+<img  src="docs/diagrams/auto_test_framework.png" width="50%" syt height="40%">
 
 ## Usage
 
@@ -204,5 +204,5 @@ Please follow the [REPORTING GUIDELINES](https://www.apache.org/foundation/polic
 * WeChat Group: At present, only personal WeChat contact is performed, users can add WeChat friends, and the relevant WeChat group will be pulled later.
 
 <div>
-<img  src="doc/pictures/contact.png" width="20%" syt height="30%">
+<img  src="docs/diagrams/contact.png" width="20%" syt height="30%">
 </div>
