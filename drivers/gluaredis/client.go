@@ -18,13 +18,14 @@
 package gluaredis
 
 import (
-	"auto-test-go/pkg/driver"
+	driver "auto-test-go/drivers"
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/redis/go-redis/v9"
 	lua "github.com/yuin/gopher-lua"
-	"time"
 )
 
 const (

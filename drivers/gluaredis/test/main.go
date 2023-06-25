@@ -18,7 +18,7 @@
 package main
 
 import (
-	"auto-test-go/pkg/driver/gluaredis"
+	"auto-test-go/drivers/gluaredis"
 	"fmt"
 
 	lua "github.com/yuin/gopher-lua"

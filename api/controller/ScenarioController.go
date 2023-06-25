@@ -25,8 +25,9 @@ import (
 	"auto-test-go/pkg/entities"
 	"auto-test-go/pkg/enum"
 	"encoding/json"
-	"github.com/astaxie/beego"
 	"strconv"
+
+	"github.com/astaxie/beego"
 )
 
 type ScenarioController struct {
