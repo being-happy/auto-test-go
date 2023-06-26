@@ -16,31 +16,39 @@
 --
 
 function add_log(ctx, log)
-     if not ctx then
-         print(log)
-        end
+    if not ctx then
+        print(log)
+       end
 
-        if not ctx.inner_log then
-              ctx.inner_log = ''
-         end
-         ctx.inner_log = ctx.inner_log .. log .. '\n'
-         print(log)
+       if not ctx.inner_log then
+             ctx.inner_log = ''
+        end
+        ctx.inner_log = ctx.inner_log .. log .. '\n'
+        print(log)
 end
 
 @commonFunctions
 
 function inner_function_@functionName(ctx, pre_value)
-    local json = require("json")
-    local http = require("http")
-    @funcBody
+   local json = require("json")
+   local http = require("http")
+   @funcBody
 end
 
 function @functionName(ctx)
-    if type(ctx) ~= 'table' then
-        print('input ctx is not a table, can not execute function')
-        return
-    end
+   if type(ctx) ~= 'table' then
+       print('input ctx is not a table, can not execute function')
+       return
+   end
 
-    ctx.return_value = inner_function_@functionName(ctx, ctx.pre_value)
-    return ctx
+   local new_ctx = inner_function_@functionName(ctx, ctx.pre_value)
+   if type(new_ctx) == "table" then
+       if tostring(new_ctx) == tostring(ctx) then
+          ctx.return_value = 'can not return ctx in function'
+          return ctx
+       end
+   end
+
+   ctx.return_value = new_ctx
+   return ctx
 end
