@@ -31,26 +31,26 @@ func main() {
 	script := fmt.Sprintf(` 
            redis = require("redis");
            local c = redis.new();
-           local ok, err =c:connect({ host = "%s" , port = "%s",database = "%d", password = "%s" });
+           local ok, err =c:connect({ host = "%s" , port = "%s",database = "%d", password = "%s" })
            if err then
-               print(err);
+               print(err)
            end
 
-           local ok, err = c:set_key("name","zhangshan");
+           local ok, err = c:set_key("name","zhangshan")
            if err then
-				print(err);
+				print(err)
            end
 
-		   local value, err = c:get_key("name");
+		   local value, err = c:get_key("name")
            print(value);
-           local success, err = c:del_key("name");
+           local success, err = c:del_key("name")
            if err then
-              print(err);
+              print(err)
            end
 
-           local ok = c:close();
+           local ok = c:close()
            if ok then
-               print('close success');
+               print('close success')
            end
 `, "127.0.0.1", "6379", 11, "123456")
 	err := L.DoString(script)
