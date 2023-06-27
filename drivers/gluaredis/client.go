@@ -18,14 +18,13 @@
 package gluaredis
 
 import (
-	driver "auto-test-go/drivers"
+	"auto-test-go/drivers"
 	"context"
 	"errors"
 	"fmt"
-	"time"
-
 	"github.com/redis/go-redis/v9"
 	lua "github.com/yuin/gopher-lua"
+	"time"
 )
 
 const (
@@ -91,7 +90,7 @@ func clientConnectMethod(L *lua.LState) int {
 	}
 
 	client := checkClient(L)
-	cs := driver.GetValue(L, 2)
+	cs := drivers.GetValue(L, 2)
 
 	dsn, err := parseConnectionString(cs, client.Timeout)
 	if err != nil {
