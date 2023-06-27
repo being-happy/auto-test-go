@@ -15,6 +15,7 @@
 -- limitations under the License.
 --
 
+
 function add_log(ctx, log)
      if not ctx then
          print(log)
@@ -25,30 +26,37 @@ function add_log(ctx, log)
          end
          ctx.inner_log = ctx.inner_log .. log .. '\n'
          print(log)
-end
+ end
 
 @commonFunctions
 
-function inner_function_@functionName(ctx, pre_value)
-    local json = require("json")
-    local http = require("http")
-    @funcBody
-end
+ function inner_function_@functionName(ctx)
+     local json = require("json")
+     redis = require("redis")
+     local c = redis.new()
+     local ok, err =c:connect({host = "@host" , port = "@port",database = "@dbName", password = "@password"})
+     if err then
+        add_log(ctx ,'redis connect error: ' .. err)
+     end
 
-function @functionName(ctx)
-    if type(ctx) ~= 'table' then
-        print('input ctx is not a table, can not execute function')
+     if ok then
+       @funcBody
+     end
+
+     local ok = c:close();
+      if ok then
+         add_log(ctx ,'redis close success')
+      end
+ end
+
+ function @functionName(ctx)
+     local json = require("json")
+    if type(ctx) ~= "table" then
+        ctx.add_log('input ctx is not a table, can not execute function')
         return
     end
 
-    local new_ctx = inner_function_@functionName(ctx, ctx.pre_value)
-    if type(new_ctx) == "table" then
-        if tostring(new_ctx) == tostring(ctx) then
-           ctx.return_value = 'can not return ctx in function'
-           return ctx
-        end
-    end
-
-    ctx.return_value = new_ctx
+   -- add_log(ctx,'script input ctx is:' .. json.encode(ctx))
+    inner_function_@functionName(ctx)
     return ctx
 end
