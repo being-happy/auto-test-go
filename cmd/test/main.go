@@ -268,7 +268,7 @@ func batchUserCaseTest() {
 		Id:          "1",
 		CommandType: enum.CommandType_Execute,
 		UserCases: []entities.UserCase{
-			entities.UserCase{
+			{
 				Name: "preside",
 				Id:   1,
 				Parameters: []entities.CaseParameter{

@@ -27,7 +27,16 @@
 end
 
 function do_common_function_execute(ctx)
-    return @functionName
+    local new_ctx = @functionName
+    if type(new_ctx) == "table" then
+        if tostring(new_ctx) == tostring(ctx) then
+           ctx.return_value = 'can not return ctx in function'
+           return ctx
+        end
+    end
+
+    ctx.return_value = new_ctx
+    return ctx
 end
 
 @funcBody
