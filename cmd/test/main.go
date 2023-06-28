@@ -59,6 +59,43 @@ func main() {
 	scriptDebuggerTest()
 }
 
+func scriptDebuggerParameterTest() {
+	execCommand := command.SingleScriptExecuteCommand{
+		Name: "scriptLady",
+		Id:   "1",
+		Parameters: []entities.CaseParameter{
+			{
+				Name:  "id",
+				Value: "1",
+			}, {
+				Name:  "name",
+				Value: "zhangSan",
+			}, {
+				Name:  "age",
+				Value: "15",
+			}, {
+				Name:  "host",
+				Value: "",
+			}, {
+				Name:  "pre_value",
+				Value: "hello",
+			},
+		},
+		BaseScript: entities.BaseScript{
+			ScriptType: enum.ScriptType_LuaScript,
+			Script: entities.LuaScript{
+				FuncType: enum.LuaFuncType_DoParamExecute,
+				Script:   " return 'helloword'",
+			},
+		},
+	}
+
+	bytes, _ := json.Marshal(execCommand)
+	str := string(bytes)
+	util.Logger.Warn(str)
+	factory := director.BaseDirectorFactory{}.Create(enum.DirectorType_ScriptDebugger)
+	factory.Action(&execCommand, false)
+}
 func scriptDebuggerRedisTest() {
 	execCommand := command.SingleScriptExecuteCommand{
 		Name: "scriptLady",
@@ -559,7 +596,7 @@ func scenariorTest() {
 						Timeout: 30,
 					},
 				}},
-			Scripts: map[string]*entities.BaseScript{"1": &entities.BaseScript{
+			Scripts: map[string]*entities.BaseScript{"1": {
 				ScriptType: enum.ScriptType_LuaScript,
 				Script: entities.LuaScript{
 					FuncType: enum.LuaFuncType_DoBaseExecute,
@@ -567,7 +604,7 @@ func scenariorTest() {
 				},
 			}},
 			Baggages: map[string]*entities.Baggage{
-				"1": &entities.Baggage{
+				"1": {
 					Data: []string{"['name1','age1','sex']", "['name2','age2','sex1']"},
 				},
 			},
