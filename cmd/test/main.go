@@ -49,13 +49,66 @@ func main() {
 	prepare()
 	//scriptDebuggerFunctionTest()
 	//userCaseTest()
+	scriptDebuggerRedisTest()
 	scenariorTest()
 	os.Setenv("NACOS_ADDRESS", "127.0.0.1")
 	os.Setenv("NACOS_PORT", "80")
 	os.Setenv("GROUP_NAME", "default")
 	//util.NacosHelper{}.RegisterServiceInstance()
 	//	batchUserCaseTest()
-	//scriptDebuggerTest()
+	scriptDebuggerTest()
+}
+
+func scriptDebuggerRedisTest() {
+	execCommand := command.SingleScriptExecuteCommand{
+		Name: "scriptLady",
+		Id:   "1",
+		Parameters: []entities.CaseParameter{
+			{
+				Name:  "id",
+				Value: "1",
+			}, {
+				Name:  "name",
+				Value: "zhangSan",
+			}, {
+				Name:  "age",
+				Value: "15",
+			}, {
+				Name:  "host",
+				Value: "",
+			}, {
+				Name:  "pre_value",
+				Value: "hello",
+			},
+		},
+		BaseScript: entities.BaseScript{
+			ScriptType: enum.ScriptType_LuaScript,
+			Script: entities.LuaScript{
+				Host:     "127.0.0.1",
+				Port:     "6379",
+				DbName:   "11",
+				Password: "123456",
+				FuncType: enum.LuaFuncType_DoRedisExecute,
+				Script: ` local ok, err = c:set_key("name","zhangshan")
+							if err then
+								print(err);
+           					end
+
+							local value, err = c:get_key("name")
+							print(value)
+           					local success, err = c:del_key("name")
+           					if err then
+              					print(err)
+							end`,
+			},
+		},
+	}
+
+	bytes, _ := json.Marshal(execCommand)
+	str := string(bytes)
+	util.Logger.Warn(str)
+	factory := director.BaseDirectorFactory{}.Create(enum.DirectorType_ScriptDebugger)
+	factory.Action(&execCommand, false)
 }
 
 func scriptDebuggerTest() {
