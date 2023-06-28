@@ -38,6 +38,7 @@ func prepare() {
 	script.CaseRegister.Register(enum.ProtocolTypeHttp_DoRequest, enum.ScriptType_HttpCall, script.NewHttpProtocolExecuteHandler())
 	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.ScriptType_LuaScript, script.NewCommonFuncDebuggerHandler())
 	script.CaseRegister.Register(enum.LuaFuncType_DoParamExecute, enum.ScriptType_LuaScript, script.NewLuaScriptDoParamHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoRedisExecute, enum.ScriptType_LuaScript, script.NewLuaScriptRedisHandler())
 
 	err := pkg.TaskDispatch.Init()
 	if err != nil {
@@ -47,15 +48,15 @@ func prepare() {
 
 func main() {
 	prepare()
-	//scriptDebuggerFunctionTest()
-	//userCaseTest()
+	scriptDebuggerFunctionTest()
+	userCaseTest()
 	scriptDebuggerRedisTest()
 	scenariorTest()
 	os.Setenv("NACOS_ADDRESS", "127.0.0.1")
 	os.Setenv("NACOS_PORT", "80")
 	os.Setenv("GROUP_NAME", "default")
-	//util.NacosHelper{}.RegisterServiceInstance()
-	//	batchUserCaseTest()
+	util.NacosHelper{}.RegisterServiceInstance()
+	batchUserCaseTest()
 	scriptDebuggerTest()
 }
 
