@@ -50,6 +50,7 @@ func prepare() {
 	script.CaseRegister.Register(enum.ProtocolTypeHttp_DoRequest, enum.ScriptType_HttpCall, script.NewHttpProtocolExecuteHandler())
 	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.ScriptType_LuaScript, script.NewCommonFuncDebuggerHandler())
 	script.CaseRegister.Register(enum.LuaFuncType_DoParamExecute, enum.ScriptType_LuaScript, script.NewLuaScriptDoParamHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoRedisExecute, enum.ScriptType_LuaScript, script.NewLuaScriptRedisHandler())
 
 	err := pkg.TaskDispatch.Init()
 	if err != nil {

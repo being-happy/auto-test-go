@@ -18,7 +18,7 @@
 package gluaredis
 
 import (
-	"auto-test-go/pkg/driver"
+	"auto-test-go/drivers"
 	"context"
 	"errors"
 	"fmt"
@@ -90,7 +90,7 @@ func clientConnectMethod(L *lua.LState) int {
 	}
 
 	client := checkClient(L)
-	cs := driver.GetValue(L, 2)
+	cs := drivers.GetValue(L, 2)
 
 	dsn, err := parseConnectionString(cs, client.Timeout)
 	if err != nil {
