@@ -15,6 +15,8 @@
 -- limitations under the License.
 --
 
+local json = require("json")
+local http = require("http")
 
 function add_log(ctx, log)
      if not ctx then
@@ -22,16 +24,17 @@ function add_log(ctx, log)
         end
 
         if not ctx.inner_log then
-              ctx.inner_log = ''
-         end
-         ctx.inner_log = ctx.inner_log .. log .. '\n'
-         print(log)
+             ctx.inner_log = ''
+        end
+
+        if log then
+             ctx.inner_log = ctx.inner_log .. log .. '\n'
+        end
  end
 
 @commonFunctions
 
  function inner_function_@functionName(ctx)
-     local json = require("json")
      mysql = require('mysql')
      c = mysql.new()
      add_log(ctx ,'msql host: ' .. '@host'  .. ', port: ' .. '@port' .. ', dbName: ' .. '@dbName' .. ', userName: ' .. '@userName' .. ', password:' ..  '@password')
@@ -46,7 +49,6 @@ function add_log(ctx, log)
  end
 
  function @functionName(ctx)
-     local json = require("json")
     if type(ctx) ~= "table" then
         ctx.add_log('input ctx is not a table, can not execute function')
         return
