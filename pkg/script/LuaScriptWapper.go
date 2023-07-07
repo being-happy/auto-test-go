@@ -18,6 +18,7 @@
 package script
 
 import (
+	"auto-test-go/drivers/gluaredis"
 	"auto-test-go/pkg/enum"
 	"github.com/cjoudrey/gluahttp"
 	json "github.com/layeh/gopher-json"
@@ -56,6 +57,10 @@ func (l *LuaScriptWrapper) wrap(state *lua.LState, funcName string) {
 		state.PreloadModule("mysql", mysql.Loader)
 		state.PreloadModule("http", gluahttp.NewHttpModule(&http.Client{}).Loader)
 		break
+	case enum.LuaFuncName_DoRedisExecute:
+		state.PreloadModule("json", json.Loader)
+		state.PreloadModule("http", gluahttp.NewHttpModule(&http.Client{}).Loader)
+		state.PreloadModule("redis", gluaredis.Loader)
 	default:
 		state.PreloadModule("json", json.Loader)
 		state.PreloadModule("http", gluahttp.NewHttpModule(&http.Client{}).Loader)
