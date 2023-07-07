@@ -74,6 +74,7 @@ func (u ScriptDebuggerExecute) execScript(scriptType string, luaScript *entities
 		DependFunctions: luaScript.DependFunctions,
 	}
 	var err error
+	luaScript.CopySqlToFuncContext(&funcCtx)
 	switch scriptType {
 	case enum.ScriptType_LuaScript:
 		err = script.CaseRegister.Trigger(ctx, &funcCtx)
@@ -85,7 +86,6 @@ func (u ScriptDebuggerExecute) execScript(scriptType string, luaScript *entities
 			util.Logger.Warn(script.CombineLogInfo(log, ctx))
 			break
 		}
-		luaScript.CopySqlToFuncContext(&funcCtx)
 		err = script.CaseRegister.Trigger(ctx, &funcCtx)
 		break
 	case enum.ScriptType_HttpCall:
