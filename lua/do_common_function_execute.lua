@@ -14,6 +14,10 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
+
+local json = require("json")
+local http = require("http")
+
  function add_log(ctx, log)
       if not ctx then
           print(log)
@@ -22,9 +26,13 @@
          if not ctx.inner_log then
                ctx.inner_log = ''
           end
-          ctx.inner_log = ctx.inner_log .. log .. '\n'
-          print(log)
+
+        if log then
+             ctx.inner_log = ctx.inner_log .. log .. '\n'
+        end
 end
+
+@commonFunctions
 
 function do_common_function_execute(ctx)
     local new_ctx = @functionName

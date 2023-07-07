@@ -26,7 +26,7 @@ type LuaScript struct {
 	Password        string   `json:"password"`
 	DbName          string   `json:"dbName"`
 	CallFunction    string   `json:"callFunction"`
-	DependFunctions []string `json:"-"`
+	DependFunctions []string `json:"dependFunctions"`
 }
 
 type SqlAuth struct {

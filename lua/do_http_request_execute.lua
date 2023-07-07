@@ -14,7 +14,8 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
-
+ local json = require("json")
+ local http = require("http")
  function add_log(ctx, log)
       if not ctx then
           print(log)
@@ -23,15 +24,15 @@
          if not ctx.inner_log then
                ctx.inner_log = ''
           end
-          ctx.inner_log = ctx.inner_log .. log .. '\n'
-          print(log)
+
+        if log then
+             ctx.inner_log = ctx.inner_log .. log .. '\n'
+        end
  end
 
 @commonFunctions
 
  function inner_function_@functionName(ctx)
-     local json = require("json")
-     local http = require("http")
      @funcBody
  end
 
@@ -42,7 +43,6 @@
         return
     end
 
-    local json = require("json")
    -- add_log(ctx,'script input ctx is:' .. json.encode(ctx))
     inner_function_@functionName(ctx)
     return ctx

@@ -15,7 +15,8 @@
 -- limitations under the License.
 --
 
-
+local json = require("json")
+local http = require("http")
 function add_log(ctx, log)
      if not ctx then
          print(log)
@@ -23,15 +24,16 @@ function add_log(ctx, log)
 
         if not ctx.inner_log then
               ctx.inner_log = ''
-         end
-         ctx.inner_log = ctx.inner_log .. log .. '\n'
-         print(log)
+        end
+
+        if log then
+             ctx.inner_log = ctx.inner_log .. log .. '\n'
+        end
  end
 
 @commonFunctions
 
  function inner_function_@functionName(ctx)
-     local json = require("json")
      redis = require("redis")
      local c = redis.new()
      local ok, err =c:connect({host = "@host" , port = "@port",database = "@dbName", password = "@password"})
@@ -50,7 +52,6 @@ function add_log(ctx, log)
  end
 
  function @functionName(ctx)
-     local json = require("json")
     if type(ctx) ~= "table" then
         ctx.add_log('input ctx is not a table, can not execute function')
         return
