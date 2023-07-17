@@ -80,6 +80,7 @@ func (u ScenarioCaseDirector) Action(command c.BaseCommand, async bool) (interfa
 		}
 	}
 
+	ctx.ExecIds = []string{}
 	ctx.Self.Variables["inner_log"] = entities.VarValue{Value: "", Type: ""}
 	ctx.Self.ParentId = 0
 	ctx.Self.Reset()

@@ -54,7 +54,7 @@ func newFn(L *lua.LState) int {
 }
 
 func escape(source string) string {
-	var j int = 0
+	var j = 0
 	if len(source) == 0 {
 		return ""
 	}

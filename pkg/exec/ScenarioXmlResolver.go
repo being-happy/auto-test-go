@@ -79,6 +79,7 @@ func (s SenarioXmlResolver) commonResolve(root *etree.Element) entities.Flows {
 	for _, element := range root.SelectElements("script-case") {
 		scriptDesign := entities.ScriptUnitDesign{
 			Id:    element.SelectAttrValue("script-id", "0"),
+			Name:  element.SelectAttrValue("script-name", ""),
 			Stype: element.SelectAttrValue("script-type", "ScriptType_LuaScript"),
 			Order: element.SelectAttrValue("order", "0"),
 		}
@@ -90,6 +91,18 @@ func (s SenarioXmlResolver) commonResolve(root *etree.Element) entities.Flows {
 		for _, element := range childLoop {
 			flows = append(flows, s.resolveLoop(element))
 		}
+	}
+
+	for _, element := range root.SelectElements("condition") {
+		conditoinDesign := entities.ConditoinUnitDesign{
+			Id:            element.SelectAttrValue("condition-id", "0"),
+			Name:          element.SelectAttrValue("condition-name", ""),
+			Expr:          element.SelectAttrValue("expr", ""),
+			Order:         element.SelectAttrValue("order", "0"),
+			CorrectBranch: s.commonResolve(element.SelectElement("correct-condition")),
+			ErrorBranch:   s.commonResolve(element.SelectElement("deny-condition")),
+		}
+		flows = append(flows, conditoinDesign)
 	}
 
 	sort.Sort(flows)

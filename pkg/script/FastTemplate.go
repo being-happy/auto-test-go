@@ -9,7 +9,7 @@ import (
 type FastTemplate struct {
 }
 
-func (FastTemplate) convertVar(vars map[string]entities.VarValue) map[string]interface{} {
+func (FastTemplate) ConvertVar(vars map[string]entities.VarValue) map[string]interface{} {
 	newVars := map[string]interface{}{}
 	for k, v := range vars {
 		newVars[k] = v.Value
@@ -17,7 +17,7 @@ func (FastTemplate) convertVar(vars map[string]entities.VarValue) map[string]int
 	return newVars
 }
 
-func (FastTemplate) template(source string, vars map[string]interface{}) string {
+func (FastTemplate) Template(source string, vars map[string]interface{}) string {
 	t := fasttemplate.New(source, "{@", "}")
 	source = t.ExecuteString(vars)
 	for keyWord, value := range vars {
