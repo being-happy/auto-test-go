@@ -21,6 +21,7 @@ type ScenarioContext struct {
 	Self          *ExecContext           `json:"self"`
 	ContextsTrace map[int][]*ExecContext `json:"contextsTrace"`
 	Counter       int
+	ExecIds       []string `json:"execIds"`
 }
 
 func (s *ScenarioContext) Filter(parentId int) *ScenarioContext {

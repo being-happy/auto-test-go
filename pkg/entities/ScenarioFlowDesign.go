@@ -60,6 +60,7 @@ func (u UserCaseUnitDesign) GetOrder() int {
 
 type ScriptUnitDesign struct {
 	Id    string `xml:"script-id,attr"`
+	Name  string `xml:"script-name,attr"`
 	Stype string `xml:"script-type,attr"`
 	Order string `xml:"order,attr"`
 }
@@ -67,7 +68,7 @@ type ScriptUnitDesign struct {
 func (u ScriptUnitDesign) GetOrder() int {
 	v, err := strconv.Atoi(u.Order)
 	if err != nil {
-		util.Logger.Error("[UserCaseUnitDesign] convert string to int error: %s", err.Error())
+		util.Logger.Error("[ScriptUnitDesign] convert string to int error: %s", err.Error())
 	}
 	return v
 }
@@ -88,7 +89,7 @@ func (u LoopCaseDesign) GetOrder() int {
 
 	v, err := strconv.Atoi(u.Order)
 	if err != nil {
-		util.Logger.Error("[UserCaseUnitDesign] convert string to int error: %s", err.Error())
+		util.Logger.Error("[LoopCaseDesign] convert string to int error: %s", err.Error())
 	}
 	return v
 }
@@ -101,7 +102,28 @@ type TimeWaitUnitDesign struct {
 func (u TimeWaitUnitDesign) GetOrder() int {
 	v, err := strconv.Atoi(u.Order)
 	if err != nil {
-		util.Logger.Error("[UserCaseUnitDesign] convert string to int error: %s", err.Error())
+		util.Logger.Error("[TimeWaitUnitDesign] convert string to int error: %s", err.Error())
+	}
+	return v
+}
+
+type ConditoinUnitDesign struct {
+	Id            string `xml:"condition-id,attr"`
+	Name          string `xml:"condition-name,attr"`
+	Expr          string `xml:"expr,attr"`
+	CorrectBranch Flows  `xml:"correct-condition"`
+	ErrorBranch   Flows  `xml:"deny-condition"`
+	Order         string `xml:"order,attr"`
+}
+
+func (u ConditoinUnitDesign) GetOrder() int {
+	if u.Order == "" {
+		return 0
+	}
+
+	v, err := strconv.Atoi(u.Order)
+	if err != nil {
+		util.Logger.Error("[ConditoinUnitDesign] convert string to int error: %s", err.Error())
 	}
 	return v
 }

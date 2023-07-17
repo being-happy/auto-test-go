@@ -51,6 +51,7 @@ func prepare() {
 	script.CaseRegister.Register(enum.LuaFuncType_DoFuncExecute, enum.ScriptType_LuaScript, script.NewCommonFuncDebuggerHandler())
 	script.CaseRegister.Register(enum.LuaFuncType_DoParamExecute, enum.ScriptType_LuaScript, script.NewLuaScriptDoParamHandler())
 	script.CaseRegister.Register(enum.LuaFuncType_DoRedisExecute, enum.ScriptType_LuaScript, script.NewLuaScriptRedisHandler())
+	script.CaseRegister.Register(enum.LuaFuncType_DoJudgmentExecute, enum.ScriptType_LuaScript, script.NewLuaScriptJudgmentHandler())
 
 	err := pkg.TaskDispatch.Init()
 	if err != nil {

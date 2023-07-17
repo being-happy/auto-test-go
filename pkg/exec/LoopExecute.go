@@ -36,6 +36,7 @@ func (u LoopExecute) doWork(scenarioCase *entities.ScenarioCase, loopDesign enti
 	currentCtx.TaskId = scenariorContext.Self.TaskId
 	currentCtx.Name = "LoopContext"
 	addTrace(scenariorContext, scenariorContext.Counter, parentContext, currentCtx)
+	scenariorContext.ExecIds = append(scenariorContext.ExecIds, loopDesign.Id)
 	switch loopDesign.Ltype {
 	case enum.LoopType_Data:
 		data := scenarioCase.Baggages[loopDesign.DataId]

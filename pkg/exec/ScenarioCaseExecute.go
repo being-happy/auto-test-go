@@ -120,6 +120,7 @@ func executeFlow(scenariorCase *entities.ScenarioCase, flows entities.Flows, par
 			userCaseContext.TaskId = scenariorContext.Self.TaskId
 			scenariorContext.Counter++
 			addTrace(scenariorContext, scenariorContext.Counter, parentContext, userCaseContext)
+			scenariorContext.ExecIds = append(scenariorContext.ExecIds, caseDesign.Id)
 			execute.DoWork(userCase, userCaseContext)
 			//如果当前节点执行失败，且没有设置为跳过，则会影响父级节点继续执行，所以在每一个case 执行之前必须先判定父级节点的状态
 			if !userCase.IsSkipError && userCaseContext.GetStatus() == entities.Failed {
@@ -162,12 +163,18 @@ func executeFlow(scenariorCase *entities.ScenarioCase, flows entities.Flows, par
 				script.Script.DependFunctions = scenariorCase.DependFunctions
 			}
 			scriptContext := parentContext.Copy()
-			scriptContext.Name = "ScriptContext"
+			scriptContext.AssertSuccess = true
+			if scriptDesign.Name == "" {
+				scriptContext.Name = "ScriptContext"
+			} else {
+				scriptContext.Name = scriptDesign.Name
+			}
 			scriptExecute := ScriptDebuggerExecute{}
 			scriptContext.CaseId = scriptDesign.Id
 			scenariorContext.Counter++
 			scriptContext.TaskId = scenariorContext.Self.TaskId
 			addTrace(scenariorContext, scenariorContext.Counter, parentContext, scriptContext)
+			scenariorContext.ExecIds = append(scenariorContext.ExecIds, scriptDesign.Id)
 			scriptExecute.DoWork(script, scriptContext)
 			if !script.IsSkipError && scriptContext.GetStatus() == entities.Failed {
 				log := fmt.Sprintf("[ScenarioCaseExecute] User case id: %s , execute fail.", scriptDesign.Id)
@@ -179,6 +186,11 @@ func executeFlow(scenariorCase *entities.ScenarioCase, flows entities.Flows, par
 				scriptContext.SetStatus(entities.Success)
 			}
 			parentContext.Merge(scriptContext)
+			break
+
+		case entities.ConditoinUnitDesign:
+			conditoinUnitDesign := flow.(entities.ConditoinUnitDesign)
+			JudgmentExecute{}.doWork(scenariorCase, conditoinUnitDesign, scenariorContext, parentContext)
 			break
 		}
 	}

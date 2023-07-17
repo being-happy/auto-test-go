@@ -87,13 +87,13 @@ func (l *HttpProtocolExecuteHandler) BuildScript(execCtx *entities.ExecContext, 
 	if len(execCtx.Variables) > 0 {
 		fastTemplate := FastTemplate{}
 		//优先替换所有的花括号
-		vars := fastTemplate.convertVar(execCtx.Variables)
+		vars := fastTemplate.ConvertVar(execCtx.Variables)
 		for hk, hv := range request.Headers {
 			//优先根据变量进行匹配,若变量不匹配则根据名称匹配，若名称相同则替换
-			request.Headers[hk] = fastTemplate.template(hv, vars)
+			request.Headers[hk] = fastTemplate.Template(hv, vars)
 		}
 		//替换请求体当中的变量
-		request.Body = fastTemplate.template(request.Body, vars)
+		request.Body = fastTemplate.Template(request.Body, vars)
 	}
 
 	//解码 url 忽略错误
@@ -117,7 +117,7 @@ func (l *HttpProtocolExecuteHandler) replaceUrlParameters(dist string, variables
 
 	if len(variables) > 0 {
 		fastTemplate := FastTemplate{}
-		dist = fastTemplate.template(dist, fastTemplate.convertVar(variables))
+		dist = fastTemplate.Template(dist, fastTemplate.ConvertVar(variables))
 	}
 
 	if encode {
