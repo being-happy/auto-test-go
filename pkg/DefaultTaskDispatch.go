@@ -18,11 +18,13 @@
 package pkg
 
 import (
+	"auto-test-go/contract"
 	"auto-test-go/pkg/command"
 	"auto-test-go/pkg/db"
 	"auto-test-go/pkg/director"
 	"auto-test-go/pkg/entities"
 	"auto-test-go/pkg/enum"
+	"auto-test-go/pkg/observer"
 	"auto-test-go/pkg/util"
 	"errors"
 	"os"
@@ -156,13 +158,28 @@ func (d *DefaultTaskDispatch) resultHandler() {
 
 		switch result.ctx.(type) {
 		case *entities.ExecContext:
-			err := db.BoltDbManager.RefreshUserContext(result.ctx.(*entities.ExecContext), true)
+			execContext := result.ctx.(*entities.ExecContext)
+			observer.RunrObserver.Notify(&contract.StreamCaseCommandSubResponse{
+				CommandId: execContext.TaskId,
+				Type:      contract.CaseType_USER_CASE,
+				CaseId:    execContext.CaseId,
+				Status:    contract.RunStatus_DONE,
+			})
+			err := db.BoltDbManager.RefreshUserContext(execContext, true)
 			if err != nil {
 				util.Logger.Error("[DefaultTaskDispatch] current user command result save error: " + err.Error())
 			}
 			break
+
 		case *entities.ScenarioContext:
+			scenarioContext := result.ctx.(*entities.ScenarioContext)
 			err := db.BoltDbManager.RefreshScenarioContext(result.ctx.(*entities.ScenarioContext), true)
+			observer.RunrObserver.Notify(&contract.StreamCaseCommandSubResponse{
+				CommandId: scenarioContext.Self.TaskId,
+				Type:      contract.CaseType_USER_CASE,
+				CaseId:    scenarioContext.Self.CaseId,
+				Status:    contract.RunStatus_DONE,
+			})
 			if err != nil {
 				util.Logger.Error("[DefaultTaskDispatch] current scenario result save error: " + err.Error())
 			}

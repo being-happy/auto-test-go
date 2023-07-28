@@ -91,6 +91,9 @@ func (u LoopExecute) doWork(scenarioCase *entities.ScenarioCase, loopDesign enti
 
 	if currentCtx.GetStatus() != entities.Failed {
 		currentCtx.SetStatus(entities.Success)
+	} else {
+		parentContext.SetStop()
 	}
+
 	parentContext.Merge(currentCtx)
 }
