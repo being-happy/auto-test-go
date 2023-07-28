@@ -38,6 +38,7 @@ func main() {
 
 	prepare()
 	exitHandler()
+	GrpcServer{}.start()
 	beego.Run()
 }
 
